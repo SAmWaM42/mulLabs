@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0f172a;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.player {
+    background: #1e293b;
+    border-radius: 20px;
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+.setters {
+    background: #020617; 
+    padding: 15px;
+    border-bottom: 1px solid #334155;
+}
+
+.setters label {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.setters input,
+.setters button {
+    margin-top: 8px;
+}
+
+.setters button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+}
+
+.setters button:hover {
+    background: #2563eb;
+}
+
+.player-body {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Disk */
+.disk {
+    width: 140px;
+    height: 140px;
+    margin: 15px auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, #444 20%, #000 60%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: spin 4s linear infinite;
+    animation-play-state: paused;
+}
+
+.disk.playing {
+    animation-play-state: running;
+}
+
+.disk::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background: #111;
+    border-radius: 50%;
+}
+
+/* Controls */
+.controls button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background: #2563eb;
+}
+input[type="range"] {
+    width: 100%;
+    margin-top: 15px;
+}
+
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="player">
+
+    <div class="setters">
+        <label>Choose audio</label><br>
+        <input type="file" id="a-file" accept="audio/*"><br>
+        <button onclick="setAudio()">Load</button>
+    </div>
+
+
+    <div class="player-body">
+        <div id="disk" class="disk"></div>
+
+        <audio id="to-Play"></audio>
+
+        <div class="controls">
+            <button onclick="playSound()">Play</button>
+            <button onclick="pauseSound()">Pause</button>
+            <button onclick="toggleLoop()">Loop</button>
+        </div>
+
+        <input type="range" min="0" max="1" step="0.01" value="1" oninput="updateVolume(this)">
+    </div>
+
+</div>
+
+<script>
+let myAudio = document.getElementById("to-Play");
+let disk = document.getElementById("disk");
+
+function setAudio() {
+    const file = document.getElementById("a-file").files[0];
+    if (file) {
+        myAudio.src = URL.createObjectURL(file);
+    }
+}
+
+function playSound() {
+    myAudio.play();
+    disk.classList.add("playing");
+}
+
+function pauseSound() {
+    myAudio.pause();
+    disk.classList.remove("playing");
+}
+
+function toggleLoop() {
+    myAudio.loop = !myAudio.loop;
+}
+
+function updateVolume(slider) {
+    myAudio.volume = slider.value;
+}
+</script>
+
+</body>
+</html>
+
